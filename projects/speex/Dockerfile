@@ -16,8 +16,9 @@
 
 FROM gcr.io/oss-fuzz-base/base-builder
 MAINTAINER tmatth@videolan.org
-RUN apt-get update && apt-get install -y make autoconf libogg0 libogg-dev libtool pkg-config wget
+RUN apt-get update && apt-get install -y make autoconf libtool pkg-config wget
+RUN git clone https://git.xiph.org/ogg.git
 RUN git clone https://git.xiph.org/speex.git speex
 WORKDIR speex
-RUN git checkout origin/speex-fuzz-target
+RUN git checkout origin/speexdec-fuzz-target
 COPY build.sh $SRC/

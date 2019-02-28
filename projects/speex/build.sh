@@ -15,12 +15,20 @@
 #
 ################################################################################
 
+pushd $SRC/ogg
 ./autogen.sh
-export CFLAGS="$CFLAGS -DDISABLE_NOTIFICATIONS -DDISABLE_WARNINGS"
-./configure --prefix="$WORK" --enable-static --disable-shared
+./configure --prefix="$WORK" --enable-static --disable-shared --disable-crc
+make clean
 make -j$(nproc)
 make install
-$CXX $CXXFLAGS contrib/oss-fuzz/speex_decode_fuzzer.cc -o $OUT/speex_decode_fuzzer -L"$WORK/lib" -I"$WORK/include" -lFuzzingEngine -lspeex
+popd
+
+./autogen.sh
+export CFLAGS="$CFLAGS -DDISABLE_NOTIFICATIONS -DDISABLE_WARNINGS"
+PKG_CONFIG_PATH="$WORK"/lib/pkgconfig ./configure --prefix="$WORK" --enable-static --disable-shared
+make -j$(nproc)
+make install
+$CXX $CXXFLAGS contrib/oss-fuzz/speexdec_fuzzer.cc -o $OUT/speex_decode_fuzzer -L"$WORK/lib" -I"$WORK/include" -lFuzzingEngine -lspeex -logg
 
 # build samples and prepare corpus
 cd src/
