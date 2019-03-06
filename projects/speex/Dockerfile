@@ -18,9 +18,6 @@ FROM gcr.io/oss-fuzz-base/base-builder
 MAINTAINER tmatth@videolan.org
 RUN apt-get update && apt-get install -y make autoconf libtool pkg-config wget
 RUN git clone https://git.xiph.org/ogg.git
-WORKDIR ogg
-RUN git checkout c8391c2b267a7faf9a09df66b1f7d324e9eb7766
-WORKDIR ../
 RUN git clone https://git.xiph.org/speex.git speex
 WORKDIR speex
 RUN git checkout origin/speexdec-fuzz-target
